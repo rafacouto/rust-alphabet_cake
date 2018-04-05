@@ -1,0 +1,6 @@
+[package]
+name = "rust-gcj_input_parser"
+version = "0.1.0"
+authors = ["Rafa Couto <rcouto@titaniasoft.es>"]
+
+[dependencies]
