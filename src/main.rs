@@ -19,7 +19,7 @@ fn main() {
             }
         }
         cake.gen_possibles();
-        println!("Case #{}: {:?}", case, cake);
+        println!("Case #{}: {:#?}", case, cake);
     }
 }
 
@@ -77,44 +77,38 @@ impl Cake {
         self.cells.push(cell);
     }
 
-    pub fn gen_possibles(&self) {
-        let mut cc: usize = 0;
-        for cell in &self.cells {
-            if cell.locked {
-                self.calc_possibles(LineVector::new(cc, Direction::N));
-                self.calc_possibles(LineVector::new(cc, Direction::E));
-                self.calc_possibles(LineVector::new(cc, Direction::S));
-                self.calc_possibles(LineVector::new(cc, Direction::W));
+    pub fn gen_possibles(&mut self) {
+        for cell_index in 0 .. self.cells.len() {
+            let cell_letter = self.cells[cell_index].letter;
+            if self.cells[cell_index].locked {
+                let mut cc = cell_index;
+                while cc >= (self.c as usize) {
+                    cc -= self.c as usize;
+                    if self.cells[cc].letter != LETTER_UNDEF { break; }
+                    self.cells[cc].possibles.push(cell_letter);
+                }
+                cc = cell_index;
+                while (cc % self.c as usize) < (self.c as usize - 1) {
+                    cc += 1;
+                    if self.cells[cc].letter != LETTER_UNDEF { break; }
+                    self.cells[cc].possibles.push(cell_letter);
+                }
+                cc = cell_index;
+                while cc < self.c as usize * (self.r as usize - 1) {
+                    cc += self.c as usize;
+                    if self.cells[cc].letter != LETTER_UNDEF { break; }
+                    self.cells[cc].possibles.push(cell_letter);
+                }
+                cc = cell_index;
+                while (cc % self.c as usize) > 0 {
+                    cc -= 1;
+                    if self.cells[cc].letter != LETTER_UNDEF { break; }
+                    self.cells[cc].possibles.push(cell_letter);
+                }
             }
-            cc += 1;
         }
     }
-
-    fn calc_possibles(&self, vector: LineVector) {
-        println!("possibles {:?}:", vector);
-    }
 }
 
-#[derive(Debug)]
-enum Direction { N, E, S, W }
-
-#[derive(Debug)]
-struct LineVector {
-    cell_index: usize,
-    direction: Direction,
-}
-
-impl LineVector {
-    pub fn new(cell_index: usize, direction: Direction) -> LineVector {
-        LineVector {
-            cell_index,
-            direction,
-        }
-    }
-
-    pub fn iter(&self) -> Iterator<u8> {
-        [0, 1, 2, 3].iter()
-    }
-}
 
 
