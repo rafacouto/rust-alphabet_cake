@@ -57,7 +57,6 @@ struct Cake {
     r: u8,
     c: u8,
     cells: Vec<Cell>,
-    all_letters: Vec<u8>,
 }
 
 impl Cake {
@@ -66,14 +65,10 @@ impl Cake {
             r,
             c,
             cells: vec![],
-            all_letters: vec![],
         }
     }
 
     pub fn add_cell(&mut self, cell: Cell) {
-        if cell.locked {
-            self.all_letters.push(cell.letter);
-        }
         self.cells.push(cell);
     }
 
